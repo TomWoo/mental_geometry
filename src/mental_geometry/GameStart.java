@@ -3,18 +3,16 @@ package mental_geometry;
 import java.applet.Applet;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.TextField;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.image.AffineTransformOp;
-import java.io.File;
-import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
-
-public class GameStart extends Applet implements Runnable, KeyListener{
+public class GameStart extends Applet implements Runnable, KeyListener, ActionListener{
 	
 	enum GameState {
 		Running, Dead;
@@ -23,13 +21,13 @@ public class GameStart extends Applet implements Runnable, KeyListener{
 	GameState state = GameState.Running;
 	private Image background1;
 	private URL base;
-	private Image image, cannonballIm, targetIm;
+	private Image image, cannonballIm, targetIm, cannonIm;
+	private Cannon cannon;
 	private Graphics gr;
 	private Ball cannonball;
 	public static Ball target;
 	public static boolean levelWon;
-	
-	private Cannon cannon;
+	private ArrayList<Shapes> shapes;
 	
 	@Override
 	public void init(){
@@ -44,14 +42,15 @@ public class GameStart extends Applet implements Runnable, KeyListener{
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-        try {
-			background1 = ImageIO.read(new File("images/b1.png"));
-	        cannonballIm = ImageIO.read(new File("images/ball.png")); 
-	        targetIm = ImageIO.read(new File("images/target.png"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        background1 = getImage(base, "images/b1.png");
+        cannonIm = getImage(base, "images/cannon-new.png"); 
+        cannonballIm = getImage(base, "ball.png");
+        targetIm = getImage(base,"images/target.png");
+        shapes = new ArrayList<Shapes>();
+        
+        TextField inputLine = new TextField(15);
+        add(inputLine);
+        
 	}
 	
 	@Override
@@ -59,9 +58,6 @@ public class GameStart extends Applet implements Runnable, KeyListener{
 		cannonball = new Ball(0,0,1,1, false, cannonballIm); //CHANGE THIS!!!
 		target = new Ball(0,0,1,1, true, targetIm); //CHANGE THIS!!!
 		levelWon = false;
-        
-        cannon = new Cannon("images/cannon-new.png", 200, 200); //change this
-        cannon.setTargetAngle(180);
 		
 		Thread thread = new Thread(this);
 	    thread.start();
@@ -76,8 +72,7 @@ public class GameStart extends Applet implements Runnable, KeyListener{
 	public void destroy(){
 		super.destroy();
 	}
-
-	int counter = 0;
+	
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
@@ -87,8 +82,9 @@ public class GameStart extends Applet implements Runnable, KeyListener{
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		System.out.print("run"+counter+" ");
+		
 	}
+	
 	@Override
 	public void update(Graphics g){
 		if (image == null) {
@@ -102,19 +98,11 @@ public class GameStart extends Applet implements Runnable, KeyListener{
 		paint(gr);
 
 		g.drawImage(image, 0, 0, this);
-		System.out.print("update"+counter+" ");
 	}
 	
 	@Override
 	public void paint(Graphics g){
 		g.drawImage(background1,0,0,this);
-		
-//		g.drawImage(cannon.getImage(), cannon.getX(), cannon.getY(), this);
-//		AffineTransformOp op = cannon.update();
-//		Graphics2D g2d = (Graphics2D) g;
-//		g2d.drawImage(op.filter(cannon.getImage(), null), cannon.getX(), cannon.getY(), null);
-		System.out.println("paint"+counter+" ");
-		counter++;
 	}
 	
 	@Override
@@ -141,6 +129,12 @@ public class GameStart extends Applet implements Runnable, KeyListener{
 	
 	public static void setLevelWon(boolean lvlWon){
 		levelWon = lvlWon;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
