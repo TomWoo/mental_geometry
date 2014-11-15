@@ -4,9 +4,11 @@ import java.applet.Applet;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.TextField;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class GameStart extends Applet implements Runnable, KeyListener{
 	
@@ -17,12 +19,13 @@ public class GameStart extends Applet implements Runnable, KeyListener{
 	GameState state = GameState.Running;
 	private Image background1;
 	private URL base;
-	private Image image, cannonballIm, targetIm ;
+	private Image image, cannonballIm, targetIm, cannonIm;
+	private Cannon cannon;
 	private Graphics gr;
 	private Ball cannonball;
 	public static Ball target;
 	public static boolean levelWon;
-	
+	private ArrayList<Shapes> shapes;
 	
 	@Override
 	public void init(){
@@ -38,9 +41,13 @@ public class GameStart extends Applet implements Runnable, KeyListener{
 			// TODO: handle exception
 		}
         background1 = getImage(base, "images/b1.png");
-        cannonballIm = getImage(base, "images/cannonball.png"); 
+        cannonIm = getImage(base, "images/cannon-new.png"); 
+        cannonballIm = getImage(base, "ball.png");
         targetIm = getImage(base,"images/target.png");
+        shapes = new ArrayList<Shapes>();
         
+        TextField inputLine = new TextField(15);
+        add(inputLine);
         
 	}
 	

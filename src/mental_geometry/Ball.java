@@ -39,6 +39,7 @@ public class Ball {
 		// TODO Auto-generated method stub
 		if(r.intersects(GameStart.getTarget().getR()) && !this.isTarget){
 			GameStart.setLevelWon(true);
+			visible = false;
 		}
 		
 	}
