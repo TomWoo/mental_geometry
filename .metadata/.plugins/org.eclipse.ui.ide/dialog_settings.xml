@@ -5,6 +5,7 @@
 		<item value="true" key="WizardProjectsImportPage.STORE_COPY_PROJECT_ID"/>
 		<item value="false" key="WizardProjectsImportPage.STORE_ARCHIVE_SELECTED"/>
 		<list key="WizardProjectsImportPage.STORE_DIRECTORIES">
+			<item value="C:\Users\User\Documents\mental_geometry"/>
 			<item value="C:\Users\User\Google Drive\mental_geometry"/>
 			<item value="C:\Users\User\Google Drive\mental_geometry\mental_geometry"/>
 		</list>
