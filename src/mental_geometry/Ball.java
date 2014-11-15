@@ -6,17 +6,18 @@ import java.awt.Rectangle;
 
 public class Ball {
 	private int x, y, veloX, veloY;
-	private boolean visible;
+	private boolean visible, isTarget;
 	private Image ballImage;
 	private Rectangle r;
 	
-	public Ball(int xStart, int yStart, int vX, int vY, Image ballIm){
+	public Ball(int xStart, int yStart, int vX, int vY, boolean isT, Image ballIm){
 		this.x = xStart;
 		this.y = yStart;
 		this.veloX = vX;
 		this.veloY = vY;
 		this.ballImage = ballIm;
-		visible = false;
+		this.visible = false;
+		this.isTarget = isT;
 		r = new Rectangle(x-5,y-5,x+5,y+5);
 	}
 	
@@ -36,6 +37,9 @@ public class Ball {
 
 	private void checkcollision() {
 		// TODO Auto-generated method stub
+		if(r.intersects(GameStart.getTarget().getR()) && !this.isTarget){
+			GameStart.setLevelWon(true);
+		}
 		
 	}
 
