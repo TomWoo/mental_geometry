@@ -2,7 +2,6 @@ package mental_geometry;
 
 import java.applet.Applet;
 import java.awt.Color;
-import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
@@ -28,14 +27,16 @@ public class GameStart extends Applet implements Runnable, KeyListener{
 		setBackground(Color.BLACK);
 		setFocusable(true);
 		addKeyListener(this);
-		Frame frame = (Frame) this.getParent();
-		frame.setTitle("Mental Geometry");
+		//Frame frame = (Frame) this.getParent();
+		//frame.setTitle("Mental Geometry");
 		try {
-			base = getDocumentBase();
+			base = getCodeBase();
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-        background1 = getImage(base, "images/bg1.png");
+        background1 = getImage(base, "images/b1.png");
+        
+        
         
 	}
 	
@@ -60,6 +61,12 @@ public class GameStart extends Applet implements Runnable, KeyListener{
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
+		repaint();
+		try {
+			Thread.sleep(17);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		
 	}
 	
@@ -80,7 +87,7 @@ public class GameStart extends Applet implements Runnable, KeyListener{
 	
 	@Override
 	public void paint(Graphics g){
-		
+		g.drawImage(background1,0,0,this);
 	}
 	
 	@Override
