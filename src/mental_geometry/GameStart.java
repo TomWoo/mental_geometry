@@ -5,12 +5,14 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.TextField;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class GameStart extends Applet implements Runnable, KeyListener{
+public class GameStart extends Applet implements Runnable, KeyListener, ActionListener{
 	
 	enum GameState {
 		Running, Dead;
@@ -127,6 +129,12 @@ public class GameStart extends Applet implements Runnable, KeyListener{
 	
 	public static void setLevelWon(boolean lvlWon){
 		levelWon = lvlWon;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
