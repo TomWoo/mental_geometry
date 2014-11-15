@@ -1,5 +1,8 @@
 package mental_geometry;
 
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 
 public class Cannon {
@@ -11,11 +14,20 @@ public class Cannon {
 
 	public void update() {
 		// Moves Character or Scrolls Background accordingly.
+		double rotationRequired = 0;
 		if(this.angle < targetAngle) {
 			this.angle += vRot;
+			rotationRequired = Math.toRadians(vRot);
 		} else if(this.angle > targetAngle) {
 			this.angle -= vRot;
+			rotationRequired = -Math.toRadians(vRot);
 		}
+		AffineTransform tx = AffineTransform.getRotateInstance(
+				rotationRequired, x, y);
+		AffineTransformOp op = new AffineTransformOp(tx,
+				AffineTransformOp.TYPE_BILINEAR);
+//		Graphics2D g2d = (Graphics2D) g;
+//		g2d.drawImage(op.filter(image, null), x, y, null);
 	}
 	
 	public void setImage(BufferedImage image) {
