@@ -17,8 +17,11 @@ public class GameStart extends Applet implements Runnable, KeyListener{
 	GameState state = GameState.Running;
 	private Image background1;
 	private URL base;
-	private Image image;
+	private Image image, cannonballIm, targetIm ;
 	private Graphics gr;
+	private Ball cannonball;
+	public static Ball target;
+	public static boolean levelWon;
 	
 	
 	@Override
@@ -35,14 +38,17 @@ public class GameStart extends Applet implements Runnable, KeyListener{
 			// TODO: handle exception
 		}
         background1 = getImage(base, "images/b1.png");
-        
+        cannonballIm = getImage(base, "images/cannonball.png"); 
+        targetIm = getImage(base,"images/target.png");
         
         
 	}
 	
 	@Override
 	public void start(){
-		
+		cannonball = new Ball(0,0,1,1, false, cannonballIm); //CHANGE THIS!!!
+		target = new Ball(0,0,1,1, true, targetIm); //CHANGE THIS!!!
+		levelWon = false;
 		
 		Thread thread = new Thread(this);
 	    thread.start();
@@ -108,5 +114,12 @@ public class GameStart extends Applet implements Runnable, KeyListener{
 		
 	}
 
+	public static Ball getTarget(){
+		return target;
+	}
+	
+	public static void setLevelWon(boolean lvlWon){
+		levelWon = lvlWon;
+	}
 
 }
