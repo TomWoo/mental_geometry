@@ -52,7 +52,10 @@ public class GameStart extends Applet implements Runnable, KeyListener, ActionLi
 			// TODO: handle exception
 		}
         background1 = getImage(base, "images/b1.png");
-        cannonIm = getImage(base, "images/cannon-new.png");
+//        cannonIm = getImage(base, "images/cannon-new.png"); 
+        cannon = new Cannon("images/cannon-new.png", 120, 320);
+        cannon.setAngle(0);
+        cannon.setTargetAngle(180);
         cannonballIm = getImage(base, "ball.png");
         targetIm = getImage(base,"images/target.png");
         shapes = new ArrayList<Shapes>();
@@ -154,7 +157,13 @@ public class GameStart extends Applet implements Runnable, KeyListener, ActionLi
 			else if(level < 14){
 				g.drawImage(tShape,80,360-tShape.getHeight(this),this);
 			}
-			g.drawImage(cannonIm,120,320,this);
+//			g.drawImage(cannonIm,120,320,this);
+
+			AffineTransformOp op = cannon.update();
+			
+			System.out.println(cannon.getAngle()+" "+cannon.getX()+" "+cannon.getY());
+			g.drawImage(op.filter(cannon.getImage(), null), cannon.getX(), cannon.getY(), null);
+			
 			g.drawImage(targetIm, target.getX(), target.getY(), this);
 		}
 	}
