@@ -2,15 +2,16 @@ package mental_geometry;
 
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 
 
 public class Ball {
 	private int x, y, veloX, veloY;
 	private boolean visible, isTarget;
-	private Image ballImage;
+	private BufferedImage ballImage;
 	private Rectangle r;
 	
-	public Ball(int xStart, int yStart, int vX, int vY, boolean isT, Image ballIm){
+	public Ball(int xStart, int yStart, int vX, int vY, boolean isT, BufferedImage ballIm){
 		this.x = xStart;
 		this.y = yStart;
 		this.veloX = vX;
@@ -24,7 +25,7 @@ public class Ball {
 	public void update(){
 		x += veloX;
 		y += veloY;
-		r.setBounds(x, y, 10, 10);
+		r.setBounds(x-5, y-5, 10, 10);
 		
 		if (x < 800 && x >= 0 && y < 480 && y >= 0 ){
 			checkcollision();
@@ -33,6 +34,30 @@ public class Ball {
 			visible = false;
 			r = null;
 		}
+	}
+
+	public int getVeloX() {
+		return veloX;
+	}
+
+	public void setVeloX(int veloX) {
+		this.veloX = veloX;
+	}
+
+	public int getVeloY() {
+		return veloY;
+	}
+
+	public void setVeloY(int veloY) {
+		this.veloY = veloY;
+	}
+
+	public boolean isTarget() {
+		return isTarget;
+	}
+
+	public void setTarget(boolean isTarget) {
+		this.isTarget = isTarget;
 	}
 
 	private void checkcollision() {
@@ -72,7 +97,7 @@ public class Ball {
 		return ballImage;
 	}
 
-	public void setBallImage(Image ballImage) {
+	public void setBallImage(BufferedImage ballImage) {
 		this.ballImage = ballImage;
 	}
 
