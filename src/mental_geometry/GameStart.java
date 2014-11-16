@@ -86,9 +86,9 @@ public class GameStart extends Applet implements Runnable, KeyListener, ActionLi
         	shapes.add(new Shapes(160,360,160,200,0,0,ImageIO.read(new File("images/lvl2.png"))));
         	shapes.add(new Shapes(160,360,320,200,0,45,ImageIO.read(new File("images/lvl2.png"))));
         	shapes.add(new Shapes(160,360,320,360,0,90,ImageIO.read(new File("images/lvl2.png"))));
-        	shapes.add(new Shapes(160,360,111,152,72-90,-18,ImageIO.read(new File("images/lvl3.png"))));
+        	shapes.add(new Shapes(160,360,111,208,72-90,342,ImageIO.read(new File("images/lvl3.png"))));
         	shapes.add(new Shapes(160,360,240,114,72-90,36,ImageIO.read(new File("images/lvl3.png"))));
-        	shapes.add(new Shapes(160,360,369,152,72-90,72,ImageIO.read(new File("images/lvl3.png"))));
+        	shapes.add(new Shapes(160,360,369-3,208,72-90,54,ImageIO.read(new File("images/lvl3.png"))));
         	shapes.add(new Shapes(160,360,320,360,72-90,108,ImageIO.read(new File("images/lvl3.png"))));
         	shapes.add(new Shapes(160,360,80,222,60-90,0,ImageIO.read(new File("images/lvl4.png"))));
         	shapes.add(new Shapes(160,360,160,85,60-90,0,ImageIO.read(new File("images/lvl4.png"))));
@@ -142,20 +142,21 @@ public class GameStart extends Applet implements Runnable, KeyListener, ActionLi
 				if(angleInput > -1 && cannon.isReadyToFire()){
 					rotating = false;
 					//System.out.println(Math.cos(Math.toRadians(angleInput))*100);
-					cannonball.setVeloX(4*Math.cos(Math.toRadians(90-angleInput)));
-					cannonball.setVeloY(-4*Math.sin(Math.toRadians(90-angleInput)));
+					cannonball.setVeloX(3*Math.cos(Math.toRadians(90-angleInput)));
+					cannonball.setVeloY(-3*Math.sin(Math.toRadians(90-angleInput)));
 					cannonball.setVisible(true);
 				}
 				cannon.setReadyToFire(false);
 				cannonball.update();
+				//System.out.println(cannonball.getX() +" "+ cannonball.getY());
 				//System.out.println(cannonball.getX());
 				//System.out.println(angleInput);
 				repaint();
 				//System.out.println(levelWon);
 				//System.out.println(shapes.get(level).getSoluAngle());
-				if (levelWon && Math.abs(angleInput - shapes.get(level).solve(shapes.get(level).getCannonAngle())) < 1){ 
+				if (levelWon ){//&& Math.abs(angleInput - shapes.get(level).solve(shapes.get(level).getCannonAngle())) < 1){ 
 					//&& (Math.abs(angleInput - shapes.get(level).soluAngle) < 1.5)){
-					System.out.println("Yay!");
+					//System.out.println("Yay!");
 					state = GameState.Win;
 				}
 				try {
@@ -194,10 +195,10 @@ public class GameStart extends Applet implements Runnable, KeyListener, ActionLi
 			if(level < 5){
 				g.drawImage(tShape,160,360-tShape.getHeight(this),this);
 			}
-			else if(level < 8){
+			else if(level < 9){
 				g.drawImage(tShape,111,360-tShape.getHeight(this),this);
 			}
-			else if(level < 14){
+			else{
 				g.drawImage(tShape,80,360-tShape.getHeight(this),this);
 			}
 //			g.drawImage(cannonIm,120,320,this);
@@ -216,15 +217,15 @@ public class GameStart extends Applet implements Runnable, KeyListener, ActionLi
 //				g.drawImage(op.filter(temp, null),cannonball.getX(),cannonball.getY(),this);
 //			}
 			
-			g.drawImage(targetIm, target.getX(), target.getY(), this);
+			//g.drawImage(targetIm, target.getX(), target.getY(), this);
 			if(cannonball.isVisible()){
-				g.drawImage(cannonballIm, cannonball.getX()-5, cannonball.getY()-5, this);
+				g.drawImage(cannonballIm, (int) cannonball.getX()-5, (int) cannonball.getY()-5, this);
 				//if(cannonFire.getCurrentFrame() != 15){
 				//	g.drawImage(cannonFire.getImage(),cannonball.getX()-5,cannonball.getY()-5,this);
 				//}
 			}
 			
-			g.drawImage(targetIm, target.getX(), target.getY(), this);
+			g.drawImage(targetIm, (int) target.getX()-5, (int) target.getY()-5, this);
 		}
 		else if(state == GameState.Menu){
 			g.drawImage(titleIm,108,100,this);
@@ -283,6 +284,8 @@ public class GameStart extends Applet implements Runnable, KeyListener, ActionLi
 			cannonball = new Ball(160,360,0,0, false, cannonballIm); //CHANGE THIS!!!
 			Shapes curLvl = shapes.get(level);
 			target = new Ball(curLvl.getTargetX()-1,curLvl.getTargetY()-1,0,0, true, targetIm); //CHANGE THIS!!!
+			System.out.println(curLvl.getTargetX());
+			System.out.println(curLvl.getTargetY());
 			levelWon = false;
 			cannon = new Cannon("images/cannon-new.png", 120, 320);
 	        cannon.setAngle(0);
@@ -302,6 +305,9 @@ public class GameStart extends Applet implements Runnable, KeyListener, ActionLi
 				cannon = new Cannon("images/cannon-new.png", 120, 320);
 		        cannon.setAngle(0);
 		        state = GameState.Running;
+			}
+			else{
+				state = GameState.Menu;
 			}
 		}
 		if(state == GameState.GameOver){

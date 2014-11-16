@@ -7,7 +7,7 @@ import mental_geometry.GameStart.GameState;
 
 
 public class Ball {
-	private int x, y;
+	private double x, y;
 	private double veloX, veloY;
 	private boolean visible, isTarget;
 	private Image ballImage;
@@ -37,7 +37,7 @@ public class Ball {
 		this.isTarget = isTarget;
 	}
 
-	public Ball(int xStart, int yStart, double vX, double vY, boolean isT, Image ballIm){
+	public Ball(double xStart, double yStart, double vX, double vY, boolean isT, Image ballIm){
 		this.x = xStart;
 		this.y = yStart;
 		this.veloX = vX;
@@ -45,13 +45,13 @@ public class Ball {
 		this.ballImage = ballIm;
 		this.visible = false;
 		this.isTarget = isT;
-		r = new Rectangle(x,y,10,10);
+		r = new Rectangle((int) x, (int) y,10,10);
 	}
 	
 	public void update(){
-		x += (int) veloX;
-		y += (int) veloY;
-		r.setBounds(x, y, 5, 5);
+		x += veloX;
+		y += veloY;
+		r.setBounds((int) x,(int) y, 10, 10);
 		
 		if (x < 800 && x >= 0 && y < 480 && y >= 0 ){
 			checkcollision();
@@ -73,7 +73,7 @@ public class Ball {
 		
 	}
 
-	public int getX() {
+	public double getX() {
 		return x;
 	}
 
@@ -81,7 +81,7 @@ public class Ball {
 		this.x = x;
 	}
 
-	public int getY() {
+	public double getY() {
 		return y;
 	}
 
