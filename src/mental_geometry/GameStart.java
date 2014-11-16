@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
 import java.awt.image.AffineTransformOp;
 import java.io.File;
 import java.io.IOException;
@@ -27,7 +28,8 @@ public class GameStart extends Applet implements Runnable, KeyListener, ActionLi
 	GameState state = GameState.Running;
 	private Image background1;
 	private URL base;
-	private Image image, cannonballIm, targetIm, cannonIm;
+	Image image;
+	private BufferedImage cannonballIm, targetIm, cannonIm;
 	private Cannon cannon;
 	private Graphics gr;
 	private Ball cannonball;
@@ -51,13 +53,16 @@ public class GameStart extends Applet implements Runnable, KeyListener, ActionLi
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-        background1 = getImage(base, "images/b1.png");
-        cannonIm = getImage(base, "images/cannon-new.png");
-        cannonballIm = getImage(base, "ball.png");
-        targetIm = getImage(base,"images/target.png");
+        cannon = new Cannon("images/cannon-new.png", 120, 320);
+        cannon.setAngle(0);
+        cannon.setTargetAngle(180);
         shapes = new ArrayList<Shapes>();
-        // 360 down y, 160 accross x
         try{
+        	background1 = ImageIO.read(new File("images/b1.png"));
+            cannonIm = ImageIO.read(new File("images/cannon-new.png")); 
+            cannonballIm = ImageIO.read(new File("images/ball.png"));
+            targetIm = ImageIO.read(new File("images/target.png"));
+            shapes = new ArrayList<Shapes>();
         	shapes.add(new Shapes(160,360,240,221,120,0,ImageIO.read(new File("images/lvl1.png"))));
         	shapes.add(new Shapes(160,360,320,360,120,60,ImageIO.read(new File("images/lvl1.png"))));
         	shapes.add(new Shapes(160,360,160,200,90,0,ImageIO.read(new File("images/lvl2.png"))));
@@ -76,17 +81,18 @@ public class GameStart extends Applet implements Runnable, KeyListener, ActionLi
         catch(IOException e){
         	
         }
-        inputLine = new TextField(15);
-        add(inputLine);
-        inputLine.addActionListener(this);
-        angleInput = 0;
 	}
 	
 	@Override
 	public void start(){
-		cannonball = new Ball(159,359,0,0, false, cannonballIm); //CHANGE THIS!!!
-		target = new Ball(0,0,1,1, true, targetIm); //CHANGE THIS!!!
+		inputLine = new TextField(15);
+        add(inputLine);
+        inputLine.addActionListener(this);
+        angleInput = -1;
+		cannonball = new Ball(160,360,0,0, false, cannonballIm); //CHANGE THIS!!!
+		target = new Ball(0,0,0,0, true, targetIm); //CHANGE THIS!!!
 		levelWon = false;
+		//System.out.println("yay");
 		
 		Thread thread = new Thread(this);
 	    thread.start();
@@ -107,9 +113,19 @@ public class GameStart extends Applet implements Runnable, KeyListener, ActionLi
 		// TODO Auto-generated method stub
 		if(state == GameState.Running){
 			while(true){
+				if(angleInput > -1){
+					//System.out.println(Math.cos(Math.toRadians(angleInput))*100);
+					cannonball.setVeloX(((int) Math.round(Math.cos(Math.toRadians(angleInput))*5)));
+			        cannonball.setVeloY(((int) Math.round(-Math.sin(Math.sin(angleInput))*5)));
+			        cannonball.setVisible(true);
+				}
 				cannonball.update();
+				//System.out.println(cannonball.getX());
+				//System.out.println(angleInput);
 				repaint();
-				if (levelWon){
+				if (levelWon 
+						&& (angleInput < shapes.get(level).soluAngle + .5)
+						&& (angleInput > shapes.get(level).soluAngle - .5)){
 					System.out.println("Yay!");
 				}
 				try {
@@ -140,9 +156,6 @@ public class GameStart extends Applet implements Runnable, KeyListener, ActionLi
 	public void paint(Graphics g){
 		if(state == GameState.Running){
 			g.drawImage(background1,0,0,this);
-			if(cannonball.isVisible()){
-				g.drawImage(cannonballIm, cannonball.getX(), cannonball.getY(), this);
-			}
 			Shapes t = shapes.get(level);
 			Image tShape = t.getShapeIm();
 			if(level < 5){
@@ -155,6 +168,11 @@ public class GameStart extends Applet implements Runnable, KeyListener, ActionLi
 				g.drawImage(tShape,80,360-tShape.getHeight(this),this);
 			}
 			g.drawImage(cannonIm,120,320,this);
+			g.drawImage(targetIm, target.getX(), target.getY(), this);
+			if(cannonball.isVisible()){
+				g.drawImage(cannonballIm, cannonball.getX()-5, cannonball.getY()-5, this);
+			}
+			
 			g.drawImage(targetIm, target.getX(), target.getY(), this);
 		}
 	}
@@ -191,6 +209,7 @@ public class GameStart extends Applet implements Runnable, KeyListener, ActionLi
 		String s = inputLine.getText();
         angleInput = Double.parseDouble(s);
         //System.out.println(angleInput);
+        //System.out.println(cannonball.isVisible());
 	}
 
 }
