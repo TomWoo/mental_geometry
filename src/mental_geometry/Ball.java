@@ -45,13 +45,13 @@ public class Ball {
 		this.ballImage = ballIm;
 		this.visible = false;
 		this.isTarget = isT;
-		r = new Rectangle(x-2,y-2,x+2,y+2);
+		r = new Rectangle(x,y,10,10);
 	}
 	
 	public void update(){
 		x += (int) veloX;
 		y += (int) veloY;
-		r.setBounds(x, y, 2, 2);
+		r.setBounds(x, y, 5, 5);
 		
 		if (x < 800 && x >= 0 && y < 480 && y >= 0 ){
 			checkcollision();

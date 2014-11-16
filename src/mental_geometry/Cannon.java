@@ -28,7 +28,12 @@ public class Cannon {
 	}
 	
 	public void setTargetAngle(double targetAngle) {
-		this.targetAngle = targetAngle;
+		if(targetAngle < 0){
+			this.targetAngle = 360 + targetAngle;
+		}
+		else{
+			this.targetAngle = targetAngle;
+		}
 	}
 
 	public double getTargetAngle() {
