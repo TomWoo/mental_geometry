@@ -10,6 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.AffineTransformOp;
 import java.io.File;
@@ -19,17 +21,22 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
-public class GameStart extends Applet implements Runnable, KeyListener, ActionListener{
+public class GameStart extends Applet implements Runnable, KeyListener, ActionListener, MouseListener{
 	
 	enum GameState {
-		Running, Dead;
+		Running, Win, GameOver, Menu;
 	}
 	
-	GameState state = GameState.Running;
+	static GameState state = GameState.Menu;
+	
+	public static void setState(GameState s){
+		state = s;
+	}
+	
 	private Image background1;
 	private URL base;
 	Image image;
-	private BufferedImage cannonballIm, targetIm, cannonIm;
+	private BufferedImage cannonballIm, targetIm, cannonIm, gameOverIm, titleIm, playButIm;
 	private Cannon cannon;
 	private Graphics gr;
 	private Ball cannonball;
@@ -38,14 +45,15 @@ public class GameStart extends Applet implements Runnable, KeyListener, ActionLi
 	private ArrayList<Shapes> shapes;
 	private TextField inputLine;
 	private double angleInput;
-	private int level = 0;
+	private int level;
 	
 	@Override
 	public void init(){
 		setSize(800,480);
-		setBackground(Color.BLACK);
+		setBackground(Color.WHITE);
 		setFocusable(true);
 		addKeyListener(this);
+	    addMouseListener(this);
 		//Frame frame = (Frame) this.getParent();
 		//frame.setTitle("Mental Geometry");
 		try {
@@ -55,28 +63,31 @@ public class GameStart extends Applet implements Runnable, KeyListener, ActionLi
 		}
         cannon = new Cannon("images/cannon-new.png", 120, 320);
         cannon.setAngle(0);
-        cannon.setTargetAngle(180);
+        //cannon.setTargetAngle(180);
         shapes = new ArrayList<Shapes>();
         try{
+        	titleIm = ImageIO.read(new File("images/title.png"));
+        	playButIm = ImageIO.read(new File("images/playbutton.png"));
+        	gameOverIm = ImageIO.read(new File("images/gameover.png"));
         	background1 = ImageIO.read(new File("images/b1.png"));
             cannonIm = ImageIO.read(new File("images/cannon-new.png")); 
             cannonballIm = ImageIO.read(new File("images/ball.png"));
             targetIm = ImageIO.read(new File("images/target.png"));
             shapes = new ArrayList<Shapes>();
-        	shapes.add(new Shapes(160,360,240,221,120,0,ImageIO.read(new File("images/lvl1.png"))));
-        	shapes.add(new Shapes(160,360,320,360,120,60,ImageIO.read(new File("images/lvl1.png"))));
-        	shapes.add(new Shapes(160,360,160,200,90,0,ImageIO.read(new File("images/lvl2.png"))));
-        	shapes.add(new Shapes(160,360,320,200,90,45,ImageIO.read(new File("images/lvl2.png"))));
-        	shapes.add(new Shapes(160,360,320,360,90,90,ImageIO.read(new File("images/lvl2.png"))));
-        	shapes.add(new Shapes(160,360,111,152,72,0,ImageIO.read(new File("images/lvl3.png"))));
-        	shapes.add(new Shapes(160,360,240,114,72,36,ImageIO.read(new File("images/lvl3.png"))));
-        	shapes.add(new Shapes(160,360,369,152,72,72,ImageIO.read(new File("images/lvl3.png"))));
-        	shapes.add(new Shapes(160,360,320,360,72,108,ImageIO.read(new File("images/lvl3.png"))));
-        	shapes.add(new Shapes(160,360,80,222,60,0,ImageIO.read(new File("images/lvl4.png"))));
-        	shapes.add(new Shapes(160,360,160,85,60,0,ImageIO.read(new File("images/lvl4.png"))));
-        	shapes.add(new Shapes(160,360,320,85,60,0,ImageIO.read(new File("images/lvl4.png"))));
-        	shapes.add(new Shapes(160,360,400,222,60,0,ImageIO.read(new File("images/lvl4.png"))));
-        	shapes.add(new Shapes(160,360,320,360,60,0,ImageIO.read(new File("images/lvl4.png"))));
+        	shapes.add(new Shapes(160,360,240,221,30,0,ImageIO.read(new File("images/lvl1.png"))));
+        	shapes.add(new Shapes(160,360,320,360,30,60,ImageIO.read(new File("images/lvl1.png"))));
+        	shapes.add(new Shapes(160,360,160,200,0,0,ImageIO.read(new File("images/lvl2.png"))));
+        	shapes.add(new Shapes(160,360,320,200,0,45,ImageIO.read(new File("images/lvl2.png"))));
+        	shapes.add(new Shapes(160,360,320,360,0,90,ImageIO.read(new File("images/lvl2.png"))));
+        	shapes.add(new Shapes(160,360,111,152,72-90,0,ImageIO.read(new File("images/lvl3.png"))));
+        	shapes.add(new Shapes(160,360,240,114,72-90,36,ImageIO.read(new File("images/lvl3.png"))));
+        	shapes.add(new Shapes(160,360,369,152,72-90,72,ImageIO.read(new File("images/lvl3.png"))));
+        	shapes.add(new Shapes(160,360,320,360,72-90,108,ImageIO.read(new File("images/lvl3.png"))));
+        	shapes.add(new Shapes(160,360,80,222,60-90,0,ImageIO.read(new File("images/lvl4.png"))));
+        	shapes.add(new Shapes(160,360,160,85,60-90,0,ImageIO.read(new File("images/lvl4.png"))));
+        	shapes.add(new Shapes(160,360,320,85,60-90,0,ImageIO.read(new File("images/lvl4.png"))));
+        	shapes.add(new Shapes(160,360,400,222,60-90,0,ImageIO.read(new File("images/lvl4.png"))));
+        	shapes.add(new Shapes(160,360,320,360,60-90,0,ImageIO.read(new File("images/lvl4.png"))));
         }
         catch(IOException e){
         	
@@ -85,15 +96,17 @@ public class GameStart extends Applet implements Runnable, KeyListener, ActionLi
 	
 	@Override
 	public void start(){
+        angleInput = -2;
+		cannonball = new Ball(160,360,0,0, false, cannonballIm); //CHANGE THIS!!!
+		level = 0;
+		Shapes curLvl = shapes.get(level);
+		target = new Ball(curLvl.getTargetX()-1,curLvl.getTargetY()-1,0,0, true, targetIm); //CHANGE THIS!!!
+		levelWon = false;
+		//System.out.println("yay");
 		inputLine = new TextField(15);
         add(inputLine);
         inputLine.addActionListener(this);
-        angleInput = -1;
-		cannonball = new Ball(160,360,0,0, false, cannonballIm); //CHANGE THIS!!!
-		target = new Ball(0,0,0,0, true, targetIm); //CHANGE THIS!!!
-		levelWon = false;
-		//System.out.println("yay");
-		
+        
 		Thread thread = new Thread(this);
 	    thread.start();
 	}
@@ -111,28 +124,40 @@ public class GameStart extends Applet implements Runnable, KeyListener, ActionLi
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		if(state == GameState.Running){
-			while(true){
-				if(angleInput > -1){
-					//System.out.println(Math.cos(Math.toRadians(angleInput))*100);
-					cannonball.setVeloX(((int) Math.round(Math.cos(Math.toRadians(angleInput))*5)));
-			        cannonball.setVeloY(((int) Math.round(-Math.sin(Math.sin(angleInput))*5)));
-			        cannonball.setVisible(true);
+		while(true){
+			if(state == GameState.Running){
+				if((angleInput > -2) && (cannon.getTargetAngle() == 0)){
+					cannon.setTargetAngle(angleInput);
 				}
+				if(Math.abs(cannon.getAngle() - cannon.getTargetAngle()) < 1.5){
+					cannon.setReadyToFire(true);
+				}
+				if(angleInput > -1 && cannon.isReadyToFire()){
+					//System.out.println(Math.cos(Math.toRadians(angleInput))*100);
+					cannonball.setVeloX(4*Math.cos(Math.toRadians(90-angleInput)));
+					cannonball.setVeloY(-4*Math.sin(Math.toRadians(90-angleInput)));
+					cannonball.setVisible(true);
+				}
+				cannon.setReadyToFire(false);
 				cannonball.update();
 				//System.out.println(cannonball.getX());
 				//System.out.println(angleInput);
 				repaint();
-				if (levelWon 
-						&& (angleInput < shapes.get(level).soluAngle + .5)
-						&& (angleInput > shapes.get(level).soluAngle - .5)){
+				//System.out.println(levelWon);
+				//System.out.println(shapes.get(level).getSoluAngle());
+				if (levelWon && Math.abs(angleInput - shapes.get(level).solve(30)) < 1){ 
+					//&& (Math.abs(angleInput - shapes.get(level).soluAngle) < 1.5)){
 					System.out.println("Yay!");
+					state = GameState.Win;
 				}
 				try {
 					Thread.sleep(17);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
+			}
+			if(state == GameState.Menu){
+				repaint();
 			}
 		}
 	}
@@ -169,10 +194,9 @@ public class GameStart extends Applet implements Runnable, KeyListener, ActionLi
 			}
 //			g.drawImage(cannonIm,120,320,this);
 
-
 			AffineTransformOp op = cannon.update();
 			
-			System.out.println(cannon.getAngle()+" "+cannon.getX()+" "+cannon.getY());
+			//System.out.println(cannon.getAngle()+" "+cannon.getX()+" "+cannon.getY());
 			g.drawImage(op.filter(cannon.getImage(), null), cannon.getX(), cannon.getY(), null);
 			
 			
@@ -182,6 +206,13 @@ public class GameStart extends Applet implements Runnable, KeyListener, ActionLi
 			}
 			
 			g.drawImage(targetIm, target.getX(), target.getY(), this);
+		}
+		else if(state == GameState.Menu){
+			g.drawImage(titleIm,108,100,this);
+			g.drawImage(playButIm, 280, 300, this);
+		}
+		else if(state == GameState.GameOver){
+			g.drawImage(gameOverIm, 0, 0, this);
 		}
 	}
 	
@@ -218,6 +249,40 @@ public class GameStart extends Applet implements Runnable, KeyListener, ActionLi
         angleInput = Double.parseDouble(s);
         //System.out.println(angleInput);
         //System.out.println(cannonball.isVisible());
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		if(state == GameState.Menu && Math.abs(arg0.getX() - 400) < 150
+				&& Math.abs(arg0.getY() - 325) < 25){
+			state = GameState.Running;
+			//System.out.println(arg0.getX());
+			//System.out.println(arg0.getY());
+		}
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+		// TODO Auto-generated method stub
 	}
 
 }

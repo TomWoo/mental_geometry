@@ -17,8 +17,8 @@ public class Shapes {
 		this.shapeIm = sIm;
 	}
 	
-	private double solve(double offset){
-		return offset + soluAngle - cannonAngle;
+	public double solve(double offset){
+		return offset + soluAngle;
 	}
 
 	public int getCannonX() {

@@ -3,26 +3,29 @@ package mental_geometry;
 import java.awt.Image;
 import java.awt.Rectangle;
 
+import mental_geometry.GameStart.GameState;
+
 
 public class Ball {
-	private int x, y, veloX, veloY;
+	private int x, y;
+	private double veloX, veloY;
 	private boolean visible, isTarget;
 	private Image ballImage;
 	private Rectangle r;
 	
-	public int getVeloX() {
+	public double getVeloX() {
 		return veloX;
 	}
 
-	public void setVeloX(int veloX) {
+	public void setVeloX(double veloX) {
 		this.veloX = veloX;
 	}
 
-	public int getVeloY() {
+	public double getVeloY() {
 		return veloY;
 	}
 
-	public void setVeloY(int veloY) {
+	public void setVeloY(double veloY) {
 		this.veloY = veloY;
 	}
 
@@ -34,7 +37,7 @@ public class Ball {
 		this.isTarget = isTarget;
 	}
 
-	public Ball(int xStart, int yStart, int vX, int vY, boolean isT, Image ballIm){
+	public Ball(int xStart, int yStart, double vX, double vY, boolean isT, Image ballIm){
 		this.x = xStart;
 		this.y = yStart;
 		this.veloX = vX;
@@ -42,13 +45,13 @@ public class Ball {
 		this.ballImage = ballIm;
 		this.visible = false;
 		this.isTarget = isT;
-		r = new Rectangle(x-5,y-5,x+5,y+5);
+		r = new Rectangle(x-2,y-2,x+2,y+2);
 	}
 	
 	public void update(){
-		x += veloX;
-		y += veloY;
-		r.setBounds(x, y, 10, 10);
+		x += (int) veloX;
+		y += (int) veloY;
+		r.setBounds(x, y, 2, 2);
 		
 		if (x < 800 && x >= 0 && y < 480 && y >= 0 ){
 			checkcollision();
@@ -56,6 +59,7 @@ public class Ball {
 		else{
 			visible = false;
 			r = null;
+			GameStart.setState(GameState.GameOver);
 		}
 	}
 
@@ -64,6 +68,7 @@ public class Ball {
 		if(r.intersects(GameStart.getTarget().getR()) && !this.isTarget){
 			GameStart.setLevelWon(true);
 			visible = false;
+			System.out.println("collision");
 		}
 		
 	}
