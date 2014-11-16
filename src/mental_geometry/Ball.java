@@ -10,6 +10,30 @@ public class Ball {
 	private Image ballImage;
 	private Rectangle r;
 	
+	public int getVeloX() {
+		return veloX;
+	}
+
+	public void setVeloX(int veloX) {
+		this.veloX = veloX;
+	}
+
+	public int getVeloY() {
+		return veloY;
+	}
+
+	public void setVeloY(int veloY) {
+		this.veloY = veloY;
+	}
+
+	public boolean isTarget() {
+		return isTarget;
+	}
+
+	public void setTarget(boolean isTarget) {
+		this.isTarget = isTarget;
+	}
+
 	public Ball(int xStart, int yStart, int vX, int vY, boolean isT, Image ballIm){
 		this.x = xStart;
 		this.y = yStart;
