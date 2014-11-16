@@ -12,6 +12,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.AffineTransformOp;
 import java.io.File;
@@ -41,11 +42,12 @@ public class GameStart extends Applet implements Runnable, KeyListener, ActionLi
 	private Graphics gr;
 	private Ball cannonball;
 	public static Ball target;
-	public static boolean levelWon;
+	public static boolean levelWon, rotating = true;
 	private ArrayList<Shapes> shapes;
 	private TextField inputLine;
 	private double angleInput;
 	private int level;
+	private Animation cannonFire;
 	
 	@Override
 	public void init(){
@@ -65,7 +67,11 @@ public class GameStart extends Applet implements Runnable, KeyListener, ActionLi
         cannon.setAngle(0);
         //cannon.setTargetAngle(180);
         shapes = new ArrayList<Shapes>();
+        cannonFire = new Animation();
         try{
+        	for (int i=1; i<=15; i++ ){
+        		cannonFire.addFrame(ImageIO.read(new File("animate/" + i + ".png")), 10);
+        	}
         	titleIm = ImageIO.read(new File("images/title.png"));
         	playButIm = ImageIO.read(new File("images/playbutton.png"));
         	gameOverIm = ImageIO.read(new File("images/gameover.png"));
@@ -133,6 +139,7 @@ public class GameStart extends Applet implements Runnable, KeyListener, ActionLi
 					cannon.setReadyToFire(true);
 				}
 				if(angleInput > -1 && cannon.isReadyToFire()){
+					rotating = false;
 					//System.out.println(Math.cos(Math.toRadians(angleInput))*100);
 					cannonball.setVeloX(4*Math.cos(Math.toRadians(90-angleInput)));
 					cannonball.setVeloY(-4*Math.sin(Math.toRadians(90-angleInput)));
@@ -193,16 +200,27 @@ public class GameStart extends Applet implements Runnable, KeyListener, ActionLi
 				g.drawImage(tShape,80,360-tShape.getHeight(this),this);
 			}
 //			g.drawImage(cannonIm,120,320,this);
-
-			AffineTransformOp op = cannon.update();
-			
-			//System.out.println(cannon.getAngle()+" "+cannon.getX()+" "+cannon.getY());
-			g.drawImage(op.filter(cannon.getImage(), null), cannon.getX(), cannon.getY(), null);
-			
+//			if(rotating){
+				AffineTransformOp op = cannon.update();
+				//System.out.println(cannon.getAngle()+" "+cannon.getX()+" "+cannon.getY());
+				g.drawImage(op.filter(cannon.getImage(), null), cannon.getX(), cannon.getY(), null);
+//			}else{
+//				BufferedImage temp = cannonFire.getImage();
+//				AffineTransform tx = new AffineTransform();
+//				int width = temp.getWidth();
+//				int height = temp.getHeight();
+//				tx.rotate(angleInput, width/2, height/2); 
+//				AffineTransformOp op = new AffineTransformOp(tx,
+//						AffineTransformOp.TYPE_BILINEAR);
+//				g.drawImage(op.filter(temp, null),cannonball.getX(),cannonball.getY(),this);
+//			}
 			
 			g.drawImage(targetIm, target.getX(), target.getY(), this);
 			if(cannonball.isVisible()){
 				g.drawImage(cannonballIm, cannonball.getX()-5, cannonball.getY()-5, this);
+				//if(cannonFire.getCurrentFrame() != 15){
+				//	g.drawImage(cannonFire.getImage(),cannonball.getX()-5,cannonball.getY()-5,this);
+				//}
 			}
 			
 			g.drawImage(targetIm, target.getX(), target.getY(), this);
