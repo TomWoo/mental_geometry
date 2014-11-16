@@ -34,20 +34,24 @@ public class Cannon {
 	public double getTargetAngle() {
 		return targetAngle;
 	}
-	
+
+	double rotationRequired = 0;
 	public AffineTransformOp update() {
 		// Moves Character or Scrolls Background accordingly.
-		double rotationRequired = 0;
 		if(angle < targetAngle) {
 			angle += vRot;
-			rotationRequired = Math.toRadians(vRot);
+			rotationRequired += Math.toRadians(vRot);
 		} else if(angle > targetAngle) {
 			angle -= vRot;
-			rotationRequired = -Math.toRadians(vRot);
+			rotationRequired -= Math.toRadians(vRot);
 		}
-		System.out.println(angle+" "+targetAngle+" "+rotationRequired);
-		AffineTransform tx = AffineTransform.getRotateInstance(
-				rotationRequired, x, y);
+//		System.out.println(angle+" "+targetAngle+" "+rotationRequired);
+//		AffineTransform tx = AffineTransform.getRotateInstance(
+//				rotationRequired, x, y);
+		AffineTransform tx = new AffineTransform();
+		int width = image.getWidth();
+		int height = image.getHeight();
+		tx.rotate(rotationRequired, width/2, height/2); 
 		AffineTransformOp op = new AffineTransformOp(tx,
 				AffineTransformOp.TYPE_BILINEAR);
 		return op;
