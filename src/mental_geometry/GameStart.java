@@ -3,7 +3,6 @@ package mental_geometry;
 import java.applet.Applet;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
@@ -12,9 +11,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
 import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -48,6 +46,7 @@ public class GameStart extends Applet implements Runnable, KeyListener, ActionLi
 	private double angleInput;
 	private int level;
 	private Animation cannonFire;
+	private int r = 250, g = 250, b = 250;
 	
 	@Override
 	public void init(){
@@ -63,7 +62,7 @@ public class GameStart extends Applet implements Runnable, KeyListener, ActionLi
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-        cannon = new Cannon("images/cannon-new.png", 120, 320);
+        cannon = new Cannon("images/cannon-new.png", 120, 320, r, g, b);
         cannon.setAngle(0);
         //cannon.setTargetAngle(180);
         shapes = new ArrayList<Shapes>();
@@ -110,9 +109,11 @@ public class GameStart extends Applet implements Runnable, KeyListener, ActionLi
 		target = new Ball(curLvl.getTargetX()-1,curLvl.getTargetY()-1,0,0, true, targetIm);
 		levelWon = false;
 		//System.out.println("yay");
-		inputLine = new TextField(15);
-        add(inputLine);
-        inputLine.addActionListener(this);
+//		inputLine = new TextField(15);
+//        add(inputLine);
+//        inputLine.addActionListener(this);
+//        inputLine.addMouseListener(this);
+//		inputLine.setVisible(false);
         
 		Thread thread = new Thread(this);
 	    thread.start();
@@ -129,7 +130,7 @@ public class GameStart extends Applet implements Runnable, KeyListener, ActionLi
 	}
 	
 	@Override
-	public void run() {
+	public void run() {		
 		// TODO Auto-generated method stub
 		while(true){
 			if(state == GameState.Running){
@@ -186,8 +187,20 @@ public class GameStart extends Applet implements Runnable, KeyListener, ActionLi
 		g.drawImage(image, 0, 0, this);
 	}
 	
+	boolean turnOnTextField = false;
 	@Override
 	public void paint(Graphics g){
+		if(state==GameState.Running && turnOnTextField) {
+			inputLine = new TextField(10);
+//			inputLine.setText("");
+	        add(inputLine);
+//	        inputLine.setLocation(500, 100);
+	        inputLine.addActionListener(this);
+//	        inputLine.addMouseListener(this);
+	        inputLine.setVisible(true);
+	        turnOnTextField = false;
+		}
+		
 		if(state == GameState.Running){
 			g.drawImage(background1,0,0,this);
 			Shapes t = shapes.get(level);
@@ -284,12 +297,13 @@ public class GameStart extends Applet implements Runnable, KeyListener, ActionLi
 			cannonball = new Ball(160,360,0,0, false, cannonballIm); //CHANGE THIS!!!
 			Shapes curLvl = shapes.get(level);
 			target = new Ball(curLvl.getTargetX()-1,curLvl.getTargetY()-1,0,0, true, targetIm); //CHANGE THIS!!!
-			System.out.println(curLvl.getTargetX());
-			System.out.println(curLvl.getTargetY());
+//			System.out.println(curLvl.getTargetX());
+//			System.out.println(curLvl.getTargetY());
 			levelWon = false;
-			cannon = new Cannon("images/cannon-new.png", 120, 320);
+			cannon = new Cannon("images/cannon-new.png", 120, 320, r, g, b);
 	        cannon.setAngle(0);
 	        state = GameState.Running;
+	        turnOnTextField = true;
 			//System.out.println(arg0.getX());
 			//System.out.println(arg0.getY());
 		}
@@ -302,7 +316,7 @@ public class GameStart extends Applet implements Runnable, KeyListener, ActionLi
 				target = new Ball(curLvl.getTargetX()-1,curLvl.getTargetY()-1,0,0, true, targetIm); //CHANGE THIS!!!
 				levelWon = false;
 				//cannon.setAngle(-angleInput);
-				cannon = new Cannon("images/cannon-new.png", 120, 320);
+				cannon = new Cannon("images/cannon-new.png", 120, 320, r, g, b);
 		        cannon.setAngle(0);
 		        state = GameState.Running;
 			}

@@ -68,7 +68,7 @@ public class Ball {
 		if(r.intersects(GameStart.getTarget().getR()) && !this.isTarget){
 			GameStart.setLevelWon(true);
 			visible = false;
-			System.out.println("collision");
+//			System.out.println("collision");
 		}
 		
 	}

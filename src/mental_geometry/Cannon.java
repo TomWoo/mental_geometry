@@ -1,5 +1,6 @@
 package mental_geometry;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
@@ -16,7 +17,7 @@ public class Cannon {
 	private boolean readyToFire = false, visible = false;
 	BufferedImage image = null;
 
-	public Cannon(String filename, int x0, int y0) {
+	public Cannon(String filename, int x0, int y0, int r, int g, int b) {
 		try {
 			image = ImageIO.read(new File(filename));
 		} catch (IOException e) {
@@ -25,6 +26,10 @@ public class Cannon {
 		}
 		x = x0;
 		y = y0;
+//		image.setRGB(r, g, b);
+//		Graphics2D graphics = image.createGraphics();
+//		graphics.setPaint(new Color( r, g, b ) );
+//		graphics.fillRect( 0, 0, image.getWidth(), image.getHeight() );
 	}
 	
 	public void setTargetAngle(double targetAngle) {
